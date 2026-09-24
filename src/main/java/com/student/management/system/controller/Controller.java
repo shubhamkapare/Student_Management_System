@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.student.management.system.entity.Student;
+import com.student.management.system.entity.User;
 import com.student.management.system.service.StudentService;
+import com.student.management.system.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 
 @org.springframework.stereotype.Controller
@@ -18,10 +24,48 @@ public class Controller {
 	@Autowired
 	private StudentService studentservice;
 	
-	@GetMapping("/students")
-	public String getAllStudents(Model model)
+	@Autowired
+	private UserService user_service;
+	
+	@GetMapping("/login")
+	public String getLoginPage()
 	{
-		model.addAttribute("students",studentservice.getAllStudents());
+		return "Login.html";
+	}
+	@GetMapping("/register")
+	public String getRegisterPage()
+	{
+		return "register.html";
+	}
+	@PostMapping("/register1")
+	public String saveUser(@ModelAttribute User user)
+	{
+		user_service.saveUser(user);
+		return "redirect:/login";
+	}
+	@PostMapping("/login")
+	public String login(@RequestParam String username,@RequestParam String password,Model model,HttpSession session)
+	
+	{		
+		
+		User user=user_service.findByUsernameAndPassword(username,password);
+		if(user!=null)
+		{
+			session.setAttribute("User", user);
+			return "redirect:/students";
+		}
+		else
+		{
+			model.addAttribute("error","Invalid Username or Password");
+			return "redirect:/login";
+		}
+	}
+	@GetMapping("/students")
+	public String findByUserUid(Model model,HttpSession session)
+	{
+		User loggedUser=(User)session.getAttribute("User");
+		model.addAttribute("user",loggedUser);
+		model.addAttribute("students",studentservice.findByUserUid(loggedUser.getUid()));
 		return "Students.html";
 	}
 	@GetMapping("/students/new")
@@ -32,8 +76,10 @@ public class Controller {
 		return "create-student";
 	}
 	@PostMapping("/stu")
-	public String saveStudent(@ModelAttribute Student student)
+	public String saveStudent(@ModelAttribute Student student,HttpSession session)
 	{
+		User user=(User)session.getAttribute("User");
+		student.setUser(user);
 		studentservice.saveStudent(student);
 		return "redirect:/students";
 	}

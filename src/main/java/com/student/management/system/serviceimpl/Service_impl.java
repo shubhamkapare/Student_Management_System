@@ -15,9 +15,9 @@ public class Service_impl implements StudentService {
 	@Autowired
 	private Student_Repository studentreposotory;
 	@Override
-	public List<Student> getAllStudents() {
+	public List<Student> findByUserUid(int uid) {
 		// TODO Auto-generated method stub
-		List<Student> list = studentreposotory.findAll();
+		List<Student> list = studentreposotory.findByUserUid(uid);
 		return list;
 	}
 	@Override

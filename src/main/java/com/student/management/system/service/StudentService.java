@@ -6,7 +6,7 @@ import com.student.management.system.entity.Student;
 
 public interface StudentService {
 
-	public List<Student> getAllStudents();
+	public List<Student> findByUserUid(int uid);
 	
 	public Student saveStudent(Student student);
 	
