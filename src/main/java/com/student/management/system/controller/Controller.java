@@ -40,7 +40,7 @@ public class Controller {
 	@GetMapping("/register")
 	public String getRegisterPage()
 	{
-		return "register.html";
+		return "Register.html";
 	}
 	@PostMapping("/register1")
 	public String saveUser(@ModelAttribute User user)
