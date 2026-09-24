@@ -73,20 +73,49 @@ public class Controller {
 		model.addAttribute("students",studentservice.findByUserUid(loggedUser.getUid()));
 		return "Students.html";
 	}
+//	@GetMapping("/students/new")
+//	public String createStudentForm(Model model)
+//	{
+////		Student student=new Student();
+////		model.addAttribute("student",student);
+//		return "create-student";
+//	}
 	@GetMapping("/students/new")
-	public String createStudentForm(Model model)
+	public String createStudentForm(Model model, HttpSession session)
 	{
-//		Student student=new Student();
-//		model.addAttribute("student",student);
-		return "create-student";
+	    User loggedUser = (User) session.getAttribute("User");
+
+	    if (loggedUser == null) {
+	        return "redirect:/login";
+	    }
+
+	    Student student = new Student();
+	    model.addAttribute("student", student);
+
+	    return "create-student";
 	}
+//	@PostMapping("/stu")
+//	public String saveStudent(@ModelAttribute Student student,HttpSession session)
+//	{
+//		User user=(User)session.getAttribute("User");
+//		student.setUser(user);
+//		studentservice.saveStudent(student);
+//		return "redirect:/students";
+//	}
+	
 	@PostMapping("/stu")
-	public String saveStudent(@ModelAttribute Student student,HttpSession session)
+	public String saveStudent(@ModelAttribute Student student, HttpSession session)
 	{
-		User user=(User)session.getAttribute("User");
-		student.setUser(user);
-		studentservice.saveStudent(student);
-		return "redirect:/students";
+	    User user = (User) session.getAttribute("User");
+
+	    if (user == null) {
+	        return "redirect:/login";
+	    }
+
+	    student.setUser(user);
+	    studentservice.saveStudent(student);
+
+	    return "redirect:/students";
 	}
 	
 	@GetMapping("/students/edit/{id}")
