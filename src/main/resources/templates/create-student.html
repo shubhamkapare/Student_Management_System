@@ -114,7 +114,8 @@
 <div class="icon i4">✏️</div><div class="form-box">
     <h1>Student Registration</h1>
 
-    <form action="/stu" method="post">
+    <!--  <form action="/stu" method="post">-->
+    <form th:action="@{/stu}" method="post">
 
         <label>Student First Name</label>
         <input type="text" class="form-control" name="firstname" placeholder="Enter First Name">
