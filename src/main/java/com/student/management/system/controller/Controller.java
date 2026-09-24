@@ -27,6 +27,11 @@ public class Controller {
 	@Autowired
 	private UserService user_service;
 	
+	@GetMapping("/")
+	public String home()
+	{
+	    return "redirect:/login";
+	}
 	@GetMapping("/login")
 	public String getLoginPage()
 	{
